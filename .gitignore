@@ -1,0 +1,4 @@
+.env
+.streamlit/secrets.toml
+frontend/.next/
+frontend/node_modules/
