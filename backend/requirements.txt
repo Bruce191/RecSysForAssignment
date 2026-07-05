@@ -1,3 +1,5 @@
+# force rebuild
+fastapi==0.120.2
 adal==1.2.7
 alembic==1.17.1
 altair==5.5.0
