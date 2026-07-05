@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, Integer, Date, Text
+from sqlalchemy import Column, String, Boolean, Integer, Date, Text, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base
 #do we need both of the above declartive bases?
@@ -67,6 +67,6 @@ class Interaction(Base):
     user_id = Column(String(50), nullable=True)
     content_id = Column(String(50), nullable=True)
     interaction_type = Column(String(50), nullable=True)
-    interaction_date = Column(Date, nullable=True)
+    interaction_date = Column(DateTime, nullable=True)
 
 

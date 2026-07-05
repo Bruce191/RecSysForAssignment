@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends
-
 from sqlalchemy.orm import Session
 from sqlalchemy import distinct
-
 from backend.api_backend.Database.db import get_db
 from backend.api_backend.Database import models
 
@@ -37,9 +35,6 @@ async def get_sub_categories(db: Session = Depends(get_db)):
         for r in results
     ]
     
-    #sub_categories = db.query(distinct(models.Content.sub_category)).all()
-    #sub_categories_list = [c[0] for c in sub_categories]
-    #return sub_categories_list
 
 @router.get("/content", summary="Get all existing news content items")
 async def get_all_content(db: Session = Depends(get_db)):

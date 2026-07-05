@@ -72,9 +72,6 @@ async def user_register(request: Request, User_Register: schemas.UserRegister, d
 
     return db_user
 
-
-
-
 @router.post("/login", response_model=schemas.Token, summary="User Login")
 async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 
@@ -93,7 +90,7 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
     user = auth.get_user(db, form_data.username)
 
     if not user:
-        print("USERNAME NOT FOUND")
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
     if not security.pwd_context.verify(form_data.password, user.hashed_password):
         raise HTTPException(status_code=404, detail="Error - Incorrect login details")
@@ -116,100 +113,7 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
     return response
 
 
-# import time
 
-# @router.post("/login", response_model=schemas.Token, summary="User Login")
-# async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-
-#     start_total = time.time()
-
-#     t0 = time.time()
-#     token = request.cookies.get("access_token")  
-#     print(f"Cookie lookup: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1) — dictionary lookup in cookies
-
-#     if token:
-#         try:
-#             t0 = time.time()
-#             payload = jwt.decode(token, security.SECRET_KEY, algorithms=[security.ALGORITHM])  
-#             print(f"JWT decode: {(time.time() - t0)*1000:.3f} ms")
-#             # O(1) — small fixed-size token
-
-#             t0 = time.time()
-#             username = payload.get("sub")  
-#             print(f"Payload get username: {(time.time() - t0)*1000:.3f} ms")
-#             # O(1) — dictionary access
-
-#             if username:
-#                 raise HTTPException(status_code=400, detail="User already logged in")  
-#                 # O(1)
-
-#         except JWTError:
-#             pass  # O(1)
-
-#     t0 = time.time()
-#     user = auth.get_user(db, form_data.username)  
-#     print(f"DB lookup: {(time.time() - t0)*1000:.3f} ms")
-#     # O(log n) with index
-
-#     if not user:
-#         print("USERNAME NOT FOUND")  # O(1)
-
-#     t0 = time.time()
-#     password_valid = security.pwd_context.verify(form_data.password, user.hashed_password)
-#     print(f"Password verify: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1) — constant but intentionally slow (hashing)
-
-#     if not password_valid:
-#         raise HTTPException(status_code=404, detail="Error - Incorrect login details")  
-#         # O(1)
-
-#     t0 = time.time()
-#     access_token_expires = timedelta(minutes=security.ACCESS_TOKEN_EXPIRE_MINUTES)  
-#     print(f"Create timedelta: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1)
-
-#     t0 = time.time()
-#     access_token = security.create_access_token(
-#         data={"sub": user.name}, 
-#         expires_delta=access_token_expires
-#     )  
-#     print(f"Create token: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1)
-
-#     t0 = time.time()
-#     response = JSONResponse(content={"message": "Login successful"})  
-#     print(f"Create response: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1)
-
-#     t0 = time.time()
-#     response.delete_cookie("access_token")  
-#     print(f"Delete cookie: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1)
-
-#     t0 = time.time()
-#     response.set_cookie(
-#         key="access_token",
-#         value=access_token,
-#         httponly=True,
-#         secure=False, 
-#         samesite="Lax", 
-#         max_age=3600, 
-#         path="/" 
-#     )  
-#     print(f"Set cookie: {(time.time() - t0)*1000:.3f} ms")
-#     # O(1)
-
-#     print(f"Total time: {(time.time() - start_total)*1000:.3f} ms")
-
-#     return response  
-#     # O(1)
-
-# #Simplified = o( log n)
-
-
-
-    
 @router.post("/logout", summary="User Logout")
 async def user_delete_token():
     try:
@@ -262,8 +166,6 @@ async def get_recommendations(current_user: models.user_map = Depends(auth.get_c
 
     return recommendations
 
-
-#we need to rmove the "un" logic from this, if its already liked and the user clicks the like again just rmeove the like
 @router.post("/store-interaction", summary="Store or remove user interaction")
 async def store_interactions(
     user_interaction: schemas.UserInteraction,
@@ -372,9 +274,6 @@ async def store_interactions(
         #can a user like a post AND report it
         #we can store liekes and dislikes at the same time or do you want to rmeove the prevous clashing interaction? (similar to point 1)
     
-
-
-#fix this route to user proper schema etc
 @router.post("/update-preferences", summary="Update user preferences")
 async def update_preferences(
         prefs: dict,
@@ -392,7 +291,6 @@ async def update_preferences(
     db.refresh(current_user)
 
     return {"message": "Preferences updated"}
-
 
 @router.get("/me", summary="Get current logged-in user")
 async def get_current_user_route(current_user: models.user_map = Depends(auth.get_current_user)):
@@ -413,5 +311,3 @@ async def get_user_interactions(current_user: models.user_map = Depends(auth.get
     ).all()
 
     return interactions
-
-#route for tracking - open story click

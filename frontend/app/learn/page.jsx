@@ -26,8 +26,6 @@ export default function LearnPage() {
 
         <h2>❓ What is this app for?</h2>
         <p>It produces recommendations, allows new interactions, and extracts safety metrics.</p>
-
-        <p>Developed by Qiq, Torid, Umar and Rohini 💗</p>
       </div>
     </>
   );

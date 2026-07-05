@@ -2,3 +2,5 @@
 .streamlit/secrets.toml
 frontend/.next/
 frontend/node_modules/
+*.pyc
+__pycache__/
