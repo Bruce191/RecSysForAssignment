@@ -1,6 +1,6 @@
 "use client";
 import API_BASE from "../../lib/api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
 
@@ -15,6 +15,32 @@ export default function LoginPage() {
   const [isChild, setIsChild] = useState(false); // NEW for register
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  // ------------------------------
+  // CHECK IF ALREADY LOGGED IN
+  // ------------------------------
+  useEffect(() => {
+    async function checkIfLoggedIn() {
+      try {
+        const res = await fetch(`${API_BASE}/user/me`, {
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          const userData = await res.json();
+          loginUser(userData);
+          router.replace("/recommendations");
+          return;
+        }
+      } catch (err) {
+        // not logged in — show login page as normal
+      }
+      setCheckingAuth(false);
+    }
+
+    checkIfLoggedIn();
+  }, []);
 
   // ------------------------------
   // LOGIN
@@ -122,6 +148,10 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  if (checkingAuth) {
+    return null;
+  }
 
   return (
     <div
