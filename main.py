@@ -3,7 +3,7 @@ import uvicorn
 from backend.api_backend.RoutesFolder.UserRoutes import router as user_router
 from backend.api_backend.RoutesFolder.BackendFunctionRoutes import router as BackendFunctions_router
 from fastapi.middleware.cors import CORSMiddleware
-
+import os
 app = FastAPI()
 
 app.include_router(user_router, prefix="/user", tags=["User"])
@@ -25,4 +25,6 @@ app.add_middleware(
 
 if __name__ == "__main__":
     #uvicorn.run("main:app", reload=True)
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    #uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
