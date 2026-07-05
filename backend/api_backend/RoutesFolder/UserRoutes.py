@@ -129,7 +129,6 @@ async def user_delete_token():
             httponly=True,
             secure=True, 
             samesite="none", 
-            max_age=3600, 
             path="/"
                 
         )
