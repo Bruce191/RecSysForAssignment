@@ -1,7 +1,5 @@
 // frontend/lib/api.js
 
-const BASE_URL = "http://127.0.0.1:8000"; // FastAPI backend
-
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -24,7 +22,7 @@ async function request(endpoint, method = "GET", body = null) {
     options.body = JSON.stringify(body);
   }
 
-  const res = await fetch(`${BASE_URL}${endpoint}`, options);
+  const res = await fetch(`${API_BASE}${endpoint}`, options);
 
   if (!res.ok) {
     const error = await res.text();
