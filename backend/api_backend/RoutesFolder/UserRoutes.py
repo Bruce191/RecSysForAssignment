@@ -126,9 +126,12 @@ async def user_delete_token():
         # Attempt to delete cookie safely
         response.delete_cookie(
             key="access_token",
-            path="/",
             httponly=True,
-            samesite="lax"
+            secure=True, 
+            samesite="none", 
+            max_age=3600, 
+            path="/"
+                
         )
 
         return response
