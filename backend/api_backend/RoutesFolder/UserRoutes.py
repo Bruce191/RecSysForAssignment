@@ -105,8 +105,8 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=False, 
-        samesite="Lax", 
+        secure=True, 
+        samesite="none", 
         max_age=3600, 
         path="/" 
     )

@@ -9,8 +9,13 @@ app = FastAPI()
 app.include_router(user_router, prefix="/user", tags=["User"])
 app.include_router(BackendFunctions_router, prefix="/BackendFunctions", tags=["BackendFunctions"])
 
-origins = ["http://localhost:3000",]
-
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://recsys-for-assignment.vercel.app",
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

@@ -1,5 +1,5 @@
 "use client";
-
+import API_BASE from "../../lib/api";
 import { useEffect, useState } from "react";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,9 @@ export default function RecommendationsPage() {
 
   const fetchRecommendations = async () => {
     try {
-      const res = await fetch("http://localhost:8000/user/get-recommendations", {
+      const res = await fetch(`${API_BASE}/user/get-recommendations`, {
+
+        
         method: "POST",
         credentials: "include",
       });
@@ -36,7 +38,7 @@ export default function RecommendationsPage() {
 
   const fetchUserInteractions = async () => {
     try {
-      const res = await fetch("http://localhost:8000/user/interactions", {
+      const res = await fetch(`${API_BASE}/user/interactions`, {
         credentials: "include",
       });
       if (!res.ok) return;
@@ -60,7 +62,7 @@ export default function RecommendationsPage() {
 
     try {
       // 1️⃣ Store the interaction in backend
-      const res = await fetch("http://localhost:8000/user/store-interaction", {
+      const res = await fetch(`${API_BASE}/user/store-interaction`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -103,7 +105,8 @@ export default function RecommendationsPage() {
 
       window.refreshTimer = setTimeout(async () => {
       setUpdating(true);
-      await fetch("http://localhost:8000/BackendFunctions/refresh-recommendations", {
+      await fetch(`${API_BASE}/BackendFunctions/refresh-recommendations`, {
+        
       method: "POST",
       credentials: "include",
       });

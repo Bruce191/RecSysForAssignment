@@ -1,5 +1,7 @@
 "use client";
 
+import API_BASE from "../../lib/api";
+
 import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
@@ -24,21 +26,22 @@ export default function ManageAccount() {
   const fetchData = async () => {
     try {
       // Fetch categories
-      const resCat = await fetch("http://localhost:8000/BackendFunctions/preference-categories", {
+      const resCat = await fetch(`${API_BASE}/BackendFunctions/preference-categories`, {
         credentials: "include",
       });
       const catData = await resCat.json();
       setCategories(Array.isArray(catData) ? catData : []);
 
       // Fetch sub-categories
-      const resSubCat = await fetch("http://localhost:8000/BackendFunctions/preference-sub-categories", {
+      const resSubCat = await fetch(`${API_BASE}/BackendFunctions/preference-sub-categories`, {
+
         credentials: "include",
       });
       const subcatData = await resSubCat.json();
       setContent(Array.isArray(subcatData) ? subcatData : []);
 
       // Fetch user info + preferences
-      const userRes = await fetch("http://localhost:8000/user/me", {
+      const userRes = await fetch(`${API_BASE}/user/me`, {
         credentials: "include",
       });
       const userData = await userRes.json();
@@ -52,7 +55,8 @@ export default function ManageAccount() {
 
   const handleSave = async () => {
     try {
-      await fetch("http://localhost:8000/user/update-preferences", {
+      await fetch(`${API_BASE}/user/update-preferences`, {
+        
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -63,7 +67,7 @@ export default function ManageAccount() {
       });
       
       //refresh recommendations immediately after updating preferences
-      await fetch("http://localhost:8000/BackendFunctions/refresh-recommendations", {
+      await fetch(`${API_BASE}/BackendFunctions/refresh-recommendations`, {
         method: "POST",
         credentials: "include",
       });

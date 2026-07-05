@@ -1,5 +1,5 @@
 "use client";
-
+import API_BASE from "../../lib/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../../context/UserContext";
@@ -35,7 +35,7 @@ export default function LoginPage() {
       formData.append("username", username);
       formData.append("password", password);
 
-      const res = await fetch("http://localhost:8000/user/login", {
+      const res = await fetch(`${API_BASE}/user/login`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         credentials: "include",
@@ -49,7 +49,7 @@ export default function LoginPage() {
         return;
       }
 
-      const userRes = await fetch("http://localhost:8000/user/me", {
+      const userRes = await fetch(`${API_BASE}/user/me`, {
         credentials: "include",
       });
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8000/user/register", {
+      const res = await fetch(`${API_BASE}/user/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
