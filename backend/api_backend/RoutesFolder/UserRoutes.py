@@ -73,10 +73,7 @@ async def user_register(request: Request, User_Register: schemas.UserRegister, d
     return db_user
 
 @router.post("/login", response_model=schemas.Token, summary="User Login")
-async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-
-    if current_user:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
 
     token = request.cookies.get("access_token")
     if token:
