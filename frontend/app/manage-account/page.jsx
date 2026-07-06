@@ -1,7 +1,6 @@
 "use client";
 
 import API_BASE from "../../lib/api";
-
 import { useState, useEffect } from "react";
 import { useUser } from "../../context/UserContext";
 import { useRouter } from "next/navigation";
@@ -10,7 +9,7 @@ export default function ManageAccount() {
   const { user, loading } = useUser();
   const router = useRouter();
 
-  const [content, setContent] = useState([]); // now holding subcategories
+  const [content, setContent] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState([]);
   const [selectedSubCat, setSelectedSubCat] = useState([]);
@@ -26,17 +25,18 @@ export default function ManageAccount() {
   const fetchData = async () => {
     try {
       // Fetch categories
-      const resCat = await fetch(`${API_BASE}/BackendFunctions/preference-categories`, {
-        credentials: "include",
-      });
+      const resCat = await fetch(
+        `${API_BASE}/BackendFunctions/preference-categories`,
+        { credentials: "include" }
+      );
       const catData = await resCat.json();
       setCategories(Array.isArray(catData) ? catData : []);
 
       // Fetch sub-categories
-      const resSubCat = await fetch(`${API_BASE}/BackendFunctions/preference-sub-categories`, {
-
-        credentials: "include",
-      });
+      const resSubCat = await fetch(
+        `${API_BASE}/BackendFunctions/preference-sub-categories`,
+        { credentials: "include" }
+      );
       const subcatData = await resSubCat.json();
       setContent(Array.isArray(subcatData) ? subcatData : []);
 
@@ -46,8 +46,18 @@ export default function ManageAccount() {
       });
       const userData = await userRes.json();
 
-      setSelectedCat(Array.isArray(userData.liked_cat) ? userData.liked_cat : []);
-      setSelectedSubCat(Array.isArray(userData.liked_subcat) ? userData.liked_subcat : []);
+      // ✅ FIX: convert comma-separated string → array
+      setSelectedCat(
+        userData.liked_cat
+          ? userData.liked_cat.split(",").filter(Boolean)
+          : []
+      );
+
+      setSelectedSubCat(
+        userData.liked_subcat
+          ? userData.liked_subcat.split(",").filter(Boolean)
+          : []
+      );
     } catch (err) {
       console.error("Error fetching content or preferences:", err);
     }
@@ -56,7 +66,6 @@ export default function ManageAccount() {
   const handleSave = async () => {
     try {
       await fetch(`${API_BASE}/user/update-preferences`, {
-        
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -65,24 +74,22 @@ export default function ManageAccount() {
           subcategories: selectedSubCat,
         }),
       });
-      
-      //refresh recommendations immediately after updating preferences
+
+      // refresh recommendations immediately after updating preferences
       await fetch(`${API_BASE}/BackendFunctions/refresh-recommendations`, {
         method: "POST",
         credentials: "include",
       });
 
       alert("Preferences saved and recommendations updated!");
-
       router.push("/recommendations");
-
     } catch (err) {
       console.error(err);
       alert("Failed to save preferences");
     }
   };
 
-  // Updated content with subcategories
+  // Build subcategories based on selected categories
   const subCategories = content
     .filter((c) => selectedCat.includes(c.category))
     .map((c) => c.sub_category);
@@ -101,6 +108,7 @@ export default function ManageAccount() {
               const updatedCats = selectedCat.includes(cat)
                 ? selectedCat.filter((c) => c !== cat)
                 : [...selectedCat, cat];
+
               setSelectedCat(updatedCats);
               setSelectedSubCat([]); // reset subcategories
             }}
