@@ -43,7 +43,7 @@ async def user_register(request: Request, User_Register: schemas.UserRegister, d
     # Pick a random user who has at least one entry in ranked_recommendations
     random_user = db.query(models.User)\
         .join(models.RankedRecommendation, models.RankedRecommendation.user_id == models.User.user_id)\
-        .order_by(func.newid())\
+        .order_by(func.random())\
         .first()
 
     if random_user:

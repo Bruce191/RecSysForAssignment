@@ -4,6 +4,31 @@ Overview
 
 This is a FastAPI + Next.JS applications that lets registered users use this system as a news recommender, for example: sky news or BBC news
 
+The application is deployed live on Railway and can be tested directly without any local setup:
+
+Frontend (live app):
+https://frontend-production-21e03.up.railway.app/login
+
+Backend API docs (Swagger UI):
+https://backend-production-f15a.up.railway.app/docs
+
+NOTE: The known issue below affects the live deployment.
+When liking/disliking a post on the Recommendations page, the interaction 
+IS correctly saved to the database, but the UI may visually reset the 
+like/dislike state after the recommendations list refreshes. This is a 
+frontend display bug only — the interaction data itself is stored 
+correctly and can be confirmed via the database or the 
+/user/interactions endpoint in the Swagger UI. This does not affect 
+the correctness of the underlying data storage, only the visual 
+feedback shown to the user.
+
+The live version uses a PostgreSQL database (Railway) instead of the 
+local SQLite database described below, to satisfy the requirement for 
+centralised, persistent storage accessible by all users. See the 
+"Database Configuration" section below for more detail on this 
+environment-based setup.
+
+
 This project has been tested on the following installations:
 
 - Python 3.12.10
@@ -26,7 +51,7 @@ Step 2. Setup Instructions
 
 2.1  Install the backend packages requirements
 
-Head into /Backend open CMD and run:
+Head into root folder open CMD and run:
 
 - pip install -r requirements.txt
 
