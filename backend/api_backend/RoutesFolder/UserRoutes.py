@@ -66,9 +66,14 @@ async def user_register(request: Request, User_Register: schemas.UserRegister, d
     try:
         db.add(db_user)
         db.commit()
-    except IntegrityError:
+        db.refresh(db_user)
+    except IntegrityError as e:
         db.rollback()
-    db.refresh(db_user)
+        raise HTTPException(
+        status_code=400,
+        detail=f"Database error: {e.orig}"
+    )
+
 
     return db_user
 
