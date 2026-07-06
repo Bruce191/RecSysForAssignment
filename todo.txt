@@ -1,15 +1,8 @@
-test all app routes
-
-update requirements.txt
-update readme
-alembic
-GitHub actions for pytest
-
-
-checkout the reocmmdations algortihms ee it
-live app link
-update startup.sh
-
-The application follows a simplified DevOps pipeline. Git is used for version control, pytest is used for automated testing, and GitHub Actions provides Continuous Integration by automatically executing tests on each commit. The application is deployed manually, while local development is supported using a startup script.
-
+test all app routes - done
+update requirements.txt - done
+update readme - done
 hide register button
+live app link - done
+update startup.sh - done changed to start.bat
+give user details ot login since no register route 
+

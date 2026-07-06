@@ -57,8 +57,6 @@ async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequ
     )
     return response
 
-
-
 @router.post("/logout", summary="User Logout")
 async def user_delete_token():
     try:
@@ -221,6 +219,11 @@ async def store_interactions(
         #can a user like a post AND report it
         #we can store liekes and dislikes at the same time or do you want to rmeove the prevous clashing interaction? (similar to point 1)
     
+
+
+
+
+
 @router.post("/update-preferences", summary="Update user preferences")
 async def update_preferences(
         prefs: dict,
@@ -229,15 +232,38 @@ async def update_preferences(
     ):
     if not current_user:
         raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    user = db.query(models.User).filter(
+        models.User.user_id == current_user.user_id
+    ).first()
 
-    current_user.liked_cat = ",".join(prefs.get("categories", []))
-    current_user.liked_subcat = ",".join(prefs.get("subcategories", []))
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found in users table")
+    
+
+    user.liked_cat = ",".join(prefs.get("categories", []))
+    user.liked_subcat = ",".join(prefs.get("subcategories", []))
 
     db.add(current_user)
     db.commit()
     db.refresh(current_user)
 
     return {"message": "Preferences updated"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @router.get("/me", summary="Get current logged-in user")
 async def get_current_user_route(current_user: models.user_map = Depends(auth.get_current_user)):
