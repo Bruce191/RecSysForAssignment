@@ -3,11 +3,14 @@ import uvicorn
 from backend.api_backend.RoutesFolder.UserRoutes import router as user_router
 from backend.api_backend.RoutesFolder.BackendFunctionRoutes import router as BackendFunctions_router
 from fastapi.middleware.cors import CORSMiddleware
+from backend.api_backend.Database.db import Base, engine
 import os
 app = FastAPI()
 
 app.include_router(user_router, prefix="/user", tags=["User"])
 app.include_router(BackendFunctions_router, prefix="/BackendFunctions", tags=["BackendFunctions"])
+
+Base.metadata.create_all(bind=engine)
 
 origins = [
     "http://localhost:3000",
