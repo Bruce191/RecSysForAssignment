@@ -24,38 +24,49 @@ export default function ManageAccount() {
 
   const fetchData = async () => {
     try {
+      // -----------------------------
       // Fetch categories
+      // -----------------------------
       const resCat = await fetch(
         `${API_BASE}/BackendFunctions/preference-categories`,
         { credentials: "include" }
       );
       const catData = await resCat.json();
-      setCategories(Array.isArray(catData) ? catData : []);
 
-      // Fetch sub-categories
+      setCategories(
+        Array.isArray(catData)
+          ? catData.map((c) => c.trim())
+          : []
+      );
+
+      // -----------------------------
+      // Fetch subcategories
+      // -----------------------------
       const resSubCat = await fetch(
         `${API_BASE}/BackendFunctions/preference-sub-categories`,
         { credentials: "include" }
       );
       const subcatData = await resSubCat.json();
+
       setContent(Array.isArray(subcatData) ? subcatData : []);
 
-      // Fetch user info + preferences
+      // -----------------------------
+      // Fetch user preferences
+      // -----------------------------
       const userRes = await fetch(`${API_BASE}/user/me`, {
         credentials: "include",
       });
       const userData = await userRes.json();
 
-      // ✅ FIX: convert comma-separated string → array
       setSelectedCat(
         userData.liked_cat
-          ? userData.liked_cat.split(",").filter(Boolean)
+          ? userData.liked_cat.split(",").map((x) => x.trim()).filter(Boolean)
           : []
       );
 
       setSelectedSubCat(
         userData.liked_subcat
-          ? userData.liked_subcat.split(",").filter(Boolean)
+          ? userData.liked_subcat.split(",").map((x) => x.trim()).filter(Boolean)
           : []
       );
     } catch (err) {
@@ -75,7 +86,6 @@ export default function ManageAccount() {
         }),
       });
 
-      // refresh recommendations immediately after updating preferences
       await fetch(`${API_BASE}/BackendFunctions/refresh-recommendations`, {
         method: "POST",
         credentials: "include",
@@ -89,25 +99,33 @@ export default function ManageAccount() {
     }
   };
 
-  // Build subcategories based on selected categories
+  // -----------------------------
+  // Build subcategories
+  // -----------------------------
   const subCategories = content
-    .filter((c) => selectedCat.includes(c.category))
-    .map((c) => c.sub_category);
+    .filter((c) =>
+      selectedCat.includes(c.category?.trim())
+    )
+    .map((c) => c.sub_category?.trim());
 
   return (
     <div style={{ padding: 24 }}>
       <h1>Manage Preferences</h1>
 
+      {/* ---------------- CATEGORY CHECKBOXES ---------------- */}
       <h3>Select Categories:</h3>
+
       {categories.map((cat) => (
         <label key={cat} style={{ display: "block" }}>
           <input
             type="checkbox"
-            checked={selectedCat.includes(cat)}
+            checked={selectedCat.includes(cat.trim())}
             onChange={() => {
-              const updatedCats = selectedCat.includes(cat)
-                ? selectedCat.filter((c) => c !== cat)
-                : [...selectedCat, cat];
+              const normalized = cat.trim();
+
+              const updatedCats = selectedCat.includes(normalized)
+                ? selectedCat.filter((c) => c !== normalized)
+                : [...selectedCat, normalized];
 
               setSelectedCat(updatedCats);
               setSelectedSubCat([]); // reset subcategories
@@ -117,19 +135,23 @@ export default function ManageAccount() {
         </label>
       ))}
 
+      {/* ---------------- SUBCATEGORY CHECKBOXES ---------------- */}
       {selectedCat.length > 0 && (
         <>
           <h3>Select Subcategories:</h3>
+
           {[...new Set(subCategories)].map((sub) => (
             <label key={sub} style={{ display: "block" }}>
               <input
                 type="checkbox"
-                checked={selectedSubCat.includes(sub)}
+                checked={selectedSubCat.includes(sub?.trim())}
                 onChange={() => {
+                  const normalized = sub.trim();
+
                   setSelectedSubCat(
-                    selectedSubCat.includes(sub)
-                      ? selectedSubCat.filter((s) => s !== sub)
-                      : [...selectedSubCat, sub]
+                    selectedSubCat.includes(normalized)
+                      ? selectedSubCat.filter((s) => s !== normalized)
+                      : [...selectedSubCat, normalized]
                   );
                 }}
               />{" "}
