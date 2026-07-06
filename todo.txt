@@ -11,3 +11,5 @@ live app link
 update startup.sh
 
 The application follows a simplified DevOps pipeline. Git is used for version control, pytest is used for automated testing, and GitHub Actions provides Continuous Integration by automatically executing tests on each commit. The application is deployed manually, while local development is supported using a startup script.
+
+hide register button

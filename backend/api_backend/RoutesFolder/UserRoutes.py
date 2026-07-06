@@ -16,66 +16,6 @@ from backend.api_backend import schemas
 
 router = APIRouter()
 
-#when registering we need to ask for preferences ? Rohini: yes need to redirect to preference page and then refresh recommendations accordingly
-@router.post("/register", summary = "User self Register", response_model=schemas.UserResponse) #add a response model
-async def user_register(request: Request, User_Register: schemas.UserRegister, db: Session = Depends(get_db)):
-
-
-    ### ensure token is being read and catched correctly ###
-    token = request.cookies.get("access_token")
-
-    print(token)
-
-    if token:
-        raise HTTPException(status_code=404, detail="Error - User already logged in")
-    
-    ##########################################################################################
-
-
-
-    db_user = auth.get_user(db, name=User_Register.name)
-
-    if db_user:
-        raise HTTPException(status_code=404, detail="Error - Username already in use")
-      
-    hashed_password = security.get_password_hash(User_Register.password)
-    
-    # Pick a random user who has at least one entry in ranked_recommendations
-    random_user = db.query(models.User)\
-        .join(models.RankedRecommendation, models.RankedRecommendation.user_id == models.User.user_id)\
-        .order_by(func.random())\
-        .first()
-
-    if random_user:
-        random_user_id = random_user.user_id
-        #add check to ensure the ranodm user id is not alreayd existing insode of user_mpa if so get a new one
-    else:
-        #when no user id is found 
-        #random_user_id = None
-        #generating a random userID from the users table
-        random_user = db.query(models.User).order_by(func.random()).first() #changed odels.users to model.User if
-        random_user_id = random_user.user_id
-        print("No users with recommendations found")
-
-    db_user = models.user_map(
-    user_id=random_user_id,
-    name = User_Register.name,
-    is_child = User_Register.is_child, 
-    hashed_password=hashed_password)
-
-    try:
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-    except IntegrityError as e:
-        db.rollback()
-        raise HTTPException(
-        status_code=400,
-        detail=f"Database error: {e.orig}"
-    )
-
-
-    return db_user
 
 @router.post("/login", response_model=schemas.Token, summary="User Login")
 async def login_for_access_token(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
