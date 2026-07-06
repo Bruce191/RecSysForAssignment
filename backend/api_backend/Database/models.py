@@ -1,10 +1,5 @@
-from sqlalchemy import Column, String, Boolean, Integer, Date, Text, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import declarative_base
-#do we need both of the above declartive bases?
-
-Base = declarative_base()
-
+from sqlalchemy import Column, String, Boolean, Integer, Text, DateTime
+from db import Base
 
 # Users table
 class User(Base):

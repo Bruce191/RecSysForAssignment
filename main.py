@@ -5,6 +5,7 @@ from backend.api_backend.RoutesFolder.BackendFunctionRoutes import router as Bac
 from fastapi.middleware.cors import CORSMiddleware
 from backend.api_backend.Database.db import Base, engine
 import os
+from backend.api_backend.Database import models
 app = FastAPI()
 
 app.include_router(user_router, prefix="/user", tags=["User"])
