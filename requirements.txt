@@ -16,3 +16,4 @@ SQLAlchemy==2.0.51
 uvicorn==0.50.0
 python-multipart==0.0.20
 argon2-cffi==25.1.0
+psycopg2-binary==2.9.11
