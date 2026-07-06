@@ -108,13 +108,26 @@ export default function LoginPage() {
         <h1
           style={{
             textAlign: "center",
-            marginBottom: "24px",
+            marginBottom: "8px",
             color: "#1e40af",
             fontSize: "24px",
           }}
         >
           Recommender Systems App
         </h1>
+
+        {/* LOGIN LABEL */}
+        <p
+          style={{
+            textAlign: "center",
+            marginBottom: "24px",
+            color: "#555",
+            fontSize: "14px",
+            fontWeight: "500",
+          }}
+        >
+          Login
+        </p>
 
         {message && (
           <div
