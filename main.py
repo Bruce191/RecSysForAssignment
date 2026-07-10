@@ -18,7 +18,7 @@ origins = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://frontend-production-21e03.up.railway.app"
+    "https://ofcom-recsys-l6-softeng.up.railway.app"
 ]
 app.add_middleware(
     CORSMiddleware,

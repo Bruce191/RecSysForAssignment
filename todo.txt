@@ -1,8 +1,0 @@
-test all app routes - done
-update requirements.txt - done
-update readme - done
-hide register button
-live app link - done
-update startup.sh - done changed to start.bat
-give user details ot login since no register route 
-

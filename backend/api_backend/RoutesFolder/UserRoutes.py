@@ -220,10 +220,6 @@ async def store_interactions(
         #we can store liekes and dislikes at the same time or do you want to rmeove the prevous clashing interaction? (similar to point 1)
     
 
-
-
-
-
 @router.post("/update-preferences", summary="Update user preferences")
 async def update_preferences(
         prefs: dict,
@@ -249,15 +245,6 @@ async def update_preferences(
     db.refresh(current_user)
 
     return {"message": "Preferences updated"}
-
-
-
-
-
-
-
-
-
 
 
 

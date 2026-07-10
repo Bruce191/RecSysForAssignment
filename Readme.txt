@@ -7,10 +7,8 @@ This is a FastAPI + Next.JS applications that lets registered users use this sys
 The application is deployed live on Railway and can be tested directly without any local setup:
 
 Frontend (live app):
-https://frontend-production-21e03.up.railway.app/login
+https://ofcom-recsys-l6-softeng.up.railway.app
 
-Backend API docs (Swagger UI):
-https://backend-production-f15a.up.railway.app/docs
 
 NOTE: The known issue below affects the live deployment.
 When liking/disliking a post on the Recommendations page, the interaction 
@@ -97,9 +95,9 @@ http://localhost:3000
 PLEASE READ / CAUTIONS
 
 - Before running the application, please ensure the following:
-- Ensure Python is installed correctly (Python 3.12.10 recommended)
-- Ensure Node.js is installed (LTS version recommended)
-- Ensure npm is available (comes with Node.js installation)
+- Ensure Python is installed correctly (Python 3.12.10 tested)
+- Ensure Node.js is installed (LTS version tested)
+- Ensure npm is available (comes with Node.js tested)
 - Run pip install -r requirements.txt before starting the backend
 - Run npm install inside the /Frontend directory before starting the frontend
 - Do NOT delete the node_modules folder once installed
@@ -112,4 +110,11 @@ If the application does not start correctly:
 - Restart both terminals
 - Re-run start.bat
 - Ensure all dependencies are installed
+
+
+Since there is no login route Please use the account listed below
+
+Username:Password format
+Qiqi:Qiqi
+Torid:Torid
 
